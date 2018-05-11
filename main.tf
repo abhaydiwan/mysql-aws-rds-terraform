@@ -81,3 +81,26 @@ module "db_instance" {
   appcode                   = "${var.appcode}"
   project                   = "${var.project}"
 }
+#
+# CloudWatch resources
+#
+
+resource "aws_cloudwatch_metric_alarm" "database_cpu" {
+  alarm_name          = "RDS ALARM"
+  alarm_description   = "Database server CPU utilization"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/RDS"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "0"
+
+  dimensions {
+    DBInstanceIdentifier = "${module.db_instance.mysql.id}"
+  }
+
+  alarm_actions             = "arn:aws:sns:us-east-2:561046501578:MySQLAlert"  
+  #ok_actions                = ["${var.ok_actions}"]
+  #insufficient_data_actions = ["${var.insufficient_data_actions}"]
+}
