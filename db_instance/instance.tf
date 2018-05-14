@@ -33,3 +33,7 @@ resource "aws_db_instance" "rds" {
     ignore_changes = ["final_snapshot_identifier"]
   }
 }
+
+output "aws_rds_id" {
+  value = "${aws_db_instance.rds.id}"
+}
